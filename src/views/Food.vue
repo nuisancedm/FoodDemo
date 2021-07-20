@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input type="text" v-model="foodname" class="search" />
+    <input type="text" v-model="foodname" class="search" @keyup.enter="tofoodsearch"/>
     <div
       class="tags"
       v-for="(item, index) in classes"
@@ -31,7 +31,8 @@ export default {
   },
 
   methods: {
-    loaddata() { //axios请求
+    loaddata() {
+      //axios请求
       instance
         .get("/class", {
           params: {
@@ -40,20 +41,24 @@ export default {
         })
         .then((res) => {
           this.classes = res.data.result;
-            this.taglists= res.data.result[0].list
-        });
+          this.taglists = res.data.result[0].list.slice(0, 10);
+        })
     },
-    
-    todetail(tagid){
-        this.$router.push("/detail?id="+tagid)
+
+    todetail(tagid) {
+      this.$router.push("/detail?id=" + tagid);
     },
 
     showlist(index) {
-        this.taglists = this.classes[index].list.slice(0, 10);
+      this.taglists = this.classes[index].list.slice(0, 10);
       //   let tem = this.classes.filter((item) => item.classid == classid);
       //   this.taglists = tem[0].list.slice(0, 10);
-    //   this.index = index;
+      //   this.index = index;
     },
+
+    tofoodsearch(){
+      this.$router.push("/detail?foodname="+this.foodname)
+    }
   },
 
   computed: {
@@ -65,8 +70,8 @@ export default {
     return {
       foodname: "", //表单输入
       classes: "", //res.data.result
-        taglists: "", //初始值为res.data.result[0].list
-    //   index: 0,
+      taglists: "", //初始值为res.data.result[0].list
+      //   index: 0,
     };
   },
 };
@@ -93,5 +98,6 @@ export default {
   margin-top: 5px;
   line-height: 100px;
   margin-left: 1%;
+  text-align: center;
 }
 </style>
